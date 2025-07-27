@@ -1,0 +1,11 @@
+streamlit
+ultralytics
+Pillow
+numpy
+streamlit-webrtc
+opencv-python
+av
+bcrypt
+pandas
+torch
+pytz
