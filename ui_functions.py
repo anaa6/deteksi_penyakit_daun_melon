@@ -385,7 +385,7 @@ def show_about_app_page():
             * Pilih tab **"Unggah Gambar"** jika Anda ingin menganalisis foto daun melon yang sudah ada di perangkat Anda. Unggah gambar, dan sistem akan menampilkan hasil deteksi beserta gambarnya. Anda bisa menyesuaikan Ambang Batas Kepercayaan (Confidence Threshold) untuk melihat hasil dengan akurasi yang berbeda.
             * Pilih tab **"Gunakan Webcam"** untuk mendeteksi langsung daun melon melalui kamera perangkat Anda. Pastikan Anda memberikan izin akses kamera. Aplikasi akan menampilkan deteksi secara *real-time*.
             * Hasil deteksi akan menunjukkan jenis penyakit yang teridentifikasi (jika ada) dan tingkat keyakinan (confidence) model terhadap deteksi tersebut.
-        2.  **Riwayat Deteksi:*
+        2.  **Riwayat Deteksi:**
             * Kunjungi halaman **"Riwayat Deteksi"** untuk melihat semua catatan deteksi yang pernah Anda lakukan. Setiap catatan mencakup tanggal, jenis penyakit, tingkat kepercayaan, dan gambar yang dianalisis.
             * Anda juga bisa menghapus catatan riwayat yang tidak lagi diperlukan.
         """
