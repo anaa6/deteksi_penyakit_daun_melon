@@ -27,10 +27,10 @@ def init_db():
             CREATE TABLE IF NOT EXISTS detection_history (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT NOT NULL,
-                timestamp TEXT NOT NULL, -- Simpan waktu sebagai TEXT ISO format
+                timestamp TEXT NOT NULL, 
                 disease_name TEXT NOT NULL,
                 confidence REAL NOT NULL,
-                image_path TEXT, -- Menyimpan PATH ke file gambar di folder /uploads
+                image_path TEXT, 
                 FOREIGN KEY (username) REFERENCES users (username) ON DELETE CASCADE
             )
         ''')
