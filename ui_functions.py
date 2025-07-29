@@ -17,29 +17,21 @@ from streamlit_webrtc import webrtc_streamer, WebRtcMode
 
 @st.cache_resource
 def get_yolo_model():
-    """Memuat model YOLO dan menyimpannya di cache Streamlit."""
     return load_yolo_model()
 
 yolo_model = get_yolo_model()
 
 def _image_to_base64(image_np_rgb: np.ndarray) -> str | None:
-    """Mengonversi gambar numpy array (RGB) ke string base64."""
     try:
-        # Konversi numpy array RGB ke PIL Image
         pil_img = Image.fromarray(image_np_rgb)
-        # Simpan ke buffer memori sebagai PNG
         buffered = io.BytesIO()
         pil_img.save(buffered, format="PNG")
-        # Enkode ke base64
         return base64.b64encode(buffered.getvalue()).decode("utf-8")
     except Exception as e:
         st.error(f"Gagal mengonversi gambar ke base64: {e}")
         return None
 
 def _process_image_with_model(uploaded_image_data: bytes, confidence_threshold: float):
-    """
-    Memproses gambar yang diunggah menggunakan model YOLO.
-    """
     if not yolo_model:
         return None, "Error: Model tidak tersedia.", 0.0, [], []
 
@@ -73,7 +65,6 @@ def _process_image_with_model(uploaded_image_data: bytes, confidence_threshold: 
     return plotted_image_rgb, detection_summary, highest_confidence, detected_class_names, confidences_list
 
 def show_login_page():
-    """Menampilkan halaman login pengguna."""
     st.title("Aplikasi Deteksi Penyakit Daun Melon")
     st.subheader("Login")
 
@@ -98,7 +89,6 @@ def show_login_page():
         st.rerun()
 
 def show_register_page():
-    """Menampilkan halaman pendaftaran akun baru."""
     st.title("Aplikasi Deteksi Penyakit Daun Melon")
     st.subheader("Daftar Akun Baru")
 
@@ -127,7 +117,6 @@ def show_register_page():
         st.rerun()
 
 def show_history_page():
-    """Menampilkan riwayat deteksi objek untuk pengguna yang sedang login."""
     st.title(f"Riwayat Deteksi")
 
     st.write("Berikut adalah riwayat deteksi penyakit yang telah Anda lakukan:")
@@ -170,7 +159,6 @@ def show_history_page():
         st.info("Anda belum memiliki riwayat deteksi.")
 
 def run_webcam_detection():
-    """Menampilkan stream webcam dengan deteksi objek menggunakan confidence threshold tetap."""
     st.info("Arahkan webcam Anda ke daun melon untuk deteksi langsung.")
 
     status_placeholder = st.empty()
@@ -178,7 +166,7 @@ def run_webcam_detection():
     webrtc_ctx = None
     if yolo_model:
         webrtc_ctx = webrtc_streamer(
-            key="melon_webcam_detection_fixed_key",
+            key="melon-disease",
             mode=WebRtcMode.SENDRECV,
             rtc_configuration=RTC_CONFIGURATION,
             video_processor_factory=lambda: MelonDiseaseProcessor(yolo_model), 
@@ -213,7 +201,6 @@ def run_webcam_detection():
     st.markdown("---")
 
 def _reset_upload_state():
-    """Mengatur ulang semua session state terkait unggah gambar."""
     st.session_state.uploaded_image_data = None
     st.session_state.uploaded_file_hash = None
     st.session_state.uploaded_file_name = None
@@ -230,8 +217,6 @@ def _reset_upload_state():
         st.session_state.last_upload_conf_slider_value = 0.50
 
 def _render_upload_section():
-    """Merender bagian unggah gambar di halaman utama."""
-
     if 'uploaded_file_hash' not in st.session_state:
         _reset_upload_state()
 
@@ -253,7 +238,6 @@ def _render_upload_section():
         st.rerun() 
 
     confidence_threshold_upload = st.slider(
-        "Ambang Batas Kepercayaan (Confidence Threshold)",
         min_value=0.01,
         max_value=1.0,
         value=st.session_state.last_upload_conf_slider_value,
@@ -300,7 +284,7 @@ def _render_upload_section():
                     else:
                         st.error("Gagal menyimpan catatan deteksi ke database.")
                 else:
-                    st.error("Gagal mengonversi gambar untuk penyimpanan ke database.") # Pesan error jika base64 gagal
+                    st.error("Gagal mengonversi gambar untuk penyimpanan ke database.") 
         
         st.subheader("Perbandingan Gambar Asli dan Hasil Deteksi:")
         col1, col2 = st.columns(2, gap="small")
@@ -345,7 +329,6 @@ def _render_upload_section():
         st.info("Mohon unggah file gambar daun melon untuk memulai deteksi.")
 
 def show_main_app_page():
-    """Menampilkan halaman utama deteksi dengan pilihan mode unggah gambar atau webcam."""
     st.title(f"Selamat Datang di Halaman Deteksi, {st.session_state.username}!")
 
     if 'main_detection_mode' not in st.session_state:
@@ -365,7 +348,6 @@ def show_main_app_page():
         run_webcam_detection() 
 
 def show_about_app_page():
-    """Menampilkan halaman informasi dan panduan penggunaan aplikasi."""
     st.columns([4, 3, 4])[1].title("Info Aplikasi")
     st.markdown("---")
 

@@ -10,7 +10,6 @@ def initialize_app():
 
 initialize_app()
 
-# Inisialisasi variabel session_state
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
 if 'page' not in st.session_state:

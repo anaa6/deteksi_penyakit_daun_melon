@@ -7,15 +7,11 @@ import os
 DATABASE_FILE = "users.db"
 
 def _get_db_connection():
-    """Mengembalikan objek koneksi database."""
     conn = sqlite3.connect(DATABASE_FILE)
     conn.row_factory = sqlite3.Row 
     return conn
 
 def init_db():
-    """
-    Menginisialisasi database: membuat tabel 'users' dan 'detection_history' jika belum ada.
-    """
     with _get_db_connection() as conn: 
         c = conn.cursor()
 
@@ -39,19 +35,12 @@ def init_db():
             )
         ''')
         conn.commit()
-    print(f"Database '{DATABASE_FILE}' siap. Tabel 'users' dan 'detection_history' telah dibuat atau sudah ada.")
 
 def hash_password(password: str) -> str:
-    """
-    Menghasilkan hash SHA256 dari password.
-    """
+
     return hashlib.sha256(password.encode()).hexdigest()
 
 def add_user(username: str, password: str) -> bool:
-    """
-    Menambahkan pengguna baru ke tabel 'users'.
-    Mengembalikan True jika berhasil, False jika username sudah ada.
-    """
     with _get_db_connection() as conn: 
         c = conn.cursor()
         try:
@@ -68,9 +57,6 @@ def add_user(username: str, password: str) -> bool:
             return False
 
 def verify_user(username: str, password: str) -> bool:
-    """
-    Memverifikasi kredensial pengguna dari tabel 'users'.
-    """
     with _get_db_connection() as conn: 
         c = conn.cursor()
         c.execute("SELECT password_hashed FROM users WHERE username = ?", (username,))
@@ -82,10 +68,6 @@ def verify_user(username: str, password: str) -> bool:
     return False
 
 def add_detection_record(username: str, disease_name: str, confidence: float, image_path: str = None) -> bool:
-    """
-    Menambahkan catatan hasil deteksi ke tabel 'detection_history'.
-    image_path adalah jalur ke file gambar di sistem file (folder 'uploads').
-    """
     with _get_db_connection() as conn:
         c = conn.cursor()
         try:
@@ -104,10 +86,6 @@ def add_detection_record(username: str, disease_name: str, confidence: float, im
             return False
 
 def get_detection_history(username: str) -> list:
-    """
-    Mengambil semua hasil deteksi untuk pengguna tertentu dari tabel 'detection_history'.
-    Mengembalikan list dari dict (id, timestamp, disease_name, confidence, image_path).
-    """
     with _get_db_connection() as conn:
         c = conn.cursor()
         try:
@@ -119,9 +97,6 @@ def get_detection_history(username: str) -> list:
             return []
 
 def delete_detection_record(record_id: int) -> bool:
-    """
-    Menghapus catatan deteksi dari tabel 'detection_history' berdasarkan ID.
-    """
     with _get_db_connection() as conn: 
         c = conn.cursor()
         try:

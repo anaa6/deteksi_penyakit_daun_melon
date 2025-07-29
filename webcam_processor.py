@@ -7,13 +7,19 @@ from streamlit_webrtc import VideoProcessorBase, RTCConfiguration
 import queue 
 
 RTC_CONFIGURATION = RTCConfiguration(
-    {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
+    {
+        "iceServers": [
+            {"urls": ["stun:stun.l.google.com:19302"]},
+            {
+                "urls": ["turn:openrelay.metered.ca:80", "turn:openrelay.metered.ca:443"],
+                "username": "openrelayproject",
+                "credential": "openrelayproject"
+            }
+        ]
+    }
 )
 
 class MelonDiseaseProcessor(VideoProcessorBase):
-    """
-    Memproses frame webcam secara real-time menggunakan model YOLO untuk deteksi penyakit melon.
-    """
     _DEFAULT_CONFIDENCE_THRESHOLD = 0.50
     _PROCESS_INTERVAL = 5 
     _INFERENCE_IMG_SIZE = 480 
@@ -27,16 +33,12 @@ class MelonDiseaseProcessor(VideoProcessorBase):
         self.out_queue = queue.Queue() 
 
     def _prepare_image_for_inference(self, img_bgr: np.ndarray) -> Image.Image:
-        """Mengonversi BGR ke RGB dan menyesuaikan ukuran untuk model."""
         img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
         if self._INFERENCE_IMG_SIZE and (img_rgb.shape[0] != self._INFERENCE_IMG_SIZE or img_rgb.shape[1] != self._INFERENCE_IMG_SIZE):
             return Image.fromarray(cv2.resize(img_rgb, (self._INFERENCE_IMG_SIZE, self._INFERENCE_IMG_SIZE), interpolation=cv2.INTER_AREA))
         return Image.fromarray(img_rgb)
 
     def _process_detections_and_annotate(self, results, original_frame_bgr: np.ndarray) -> tuple[np.ndarray, dict]:
-        """
-        Memproses hasil YOLO, menganotasi frame, dan mengembalikan status deteksi.
-        """
         frame_with_annotations = original_frame_bgr.copy()
         detected_diseases = []
         confidences = []
@@ -79,9 +81,6 @@ class MelonDiseaseProcessor(VideoProcessorBase):
         return frame_with_annotations, detection_info
 
     def recv(self, frame: av.VideoFrame):
-        """
-        Menerima, memproses, dan menganotasi frame dari webcam secara real-time.
-        """
         self.frame_count += 1
         img_bgr = frame.to_ndarray(format="bgr24")
         frame_to_return = img_bgr.copy() 
