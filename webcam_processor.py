@@ -7,19 +7,11 @@ from streamlit_webrtc import VideoProcessorBase, RTCConfiguration
 import queue 
 
 RTC_CONFIGURATION = RTCConfiguration(
-    {
-        "iceServers": [
-            {"urls": ["stun:stun.l.google.com:19302"]},
-            {
-                "urls": ["turn:openrelay.metered.ca:80", "turn:openrelay.metered.ca:443"],
-                "username": "openrelayproject",
-                "credential": "openrelayproject"
-            }
-        ]
-    }
+    {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
 )
 
 class MelonDiseaseProcessor(VideoProcessorBase):
+
     _DEFAULT_CONFIDENCE_THRESHOLD = 0.50
     _PROCESS_INTERVAL = 5 
     _INFERENCE_IMG_SIZE = 480 
