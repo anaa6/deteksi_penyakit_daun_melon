@@ -213,8 +213,8 @@ def _reset_upload_state():
     st.session_state.last_saved_upload_hash = None
     st.session_state.last_saved_upload_conf_for_hash = 0.0
     
-    #if 'last_upload_conf_slider_value' not in st.session_state:
-    st.session_state.last_upload_conf_slider_value = 0.50
+    if 'last_upload_conf_slider_value' not in st.session_state:
+        st.session_state.last_upload_conf_slider_value = 0.50
 
 def _render_upload_section():
     if 'uploaded_file_hash' not in st.session_state:
@@ -238,6 +238,7 @@ def _render_upload_section():
         st.rerun() 
 
     confidence_threshold_upload = st.slider(
+        "Ambang Batas Kepercayaan (Confidence Threshold)",
         min_value=0.01,
         max_value=1.0,
         value=st.session_state.last_upload_conf_slider_value,
