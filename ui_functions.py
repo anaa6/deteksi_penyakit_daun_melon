@@ -178,27 +178,11 @@ def run_webcam_detection():
         status_placeholder.error("Model tidak tersedia.")
         return 
     
-    if webrtc_ctx and webrtc_ctx.video_processor:
-        try:
-            while True:
-                detection_info_from_queue = webrtc_ctx.video_processor.out_queue.get_nowait()
-                if detection_info_from_queue is not None:
-                    st.session_state['current_detection_info'] = detection_info_from_queue
-        except queue.Empty:
-            pass
-
+    st.markdown("---")
     if webrtc_ctx and webrtc_ctx.state.playing:
         status_placeholder.success("Webcam aktif dan mendeteksi!")
-
     else:
         status_placeholder.info("Webcam belum aktif. Klik tombol 'Start' di bawah video untuk memulai deteksi.")
-        st.session_state['current_detection_info'] = {
-            "diseases": [],
-            "avg_confidence": 0.0,
-            "keterangan": "Menunggu aktivasi webcam." 
-        }
-
-    st.markdown("---")
 
 def _reset_upload_state():
     st.session_state.uploaded_image_data = None
