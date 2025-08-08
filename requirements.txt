@@ -3,7 +3,7 @@ ultralytics
 Pillow
 numpy
 streamlit-webrtc
-opencv-python-headless
+opencv-python
 av
 pandas
 pytz
