@@ -3,11 +3,15 @@ import hashlib
 from datetime import datetime
 import pytz 
 import os 
+from streamlit.runtime.caching import get_persistent_db_path
 
 DATABASE_FILE = "users.db"
 
+def _get_persistent_db_path():
+    return get_persistent_db_path() + '/users.db'
+
 def _get_db_connection():
-    conn = sqlite3.connect(DATABASE_FILE)
+    conn = sqlite3.connect(_get_persistent_db_path())
     conn.row_factory = sqlite3.Row 
     return conn
 
